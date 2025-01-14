@@ -1,109 +1,202 @@
 import React, { useState } from 'react';
 
-const App = () => {
-  const [address, setAddress] = useState('');
-  const [selectedToken, setSelectedToken] = useState('STRK');
-  const [isValidAddress, setIsValidAddress] = useState(false);
+import herbalCream from './herbal.png';
+import vitaminWash from './vitamin.png';
 
-  const validateStarknetAddress = (addr) => {
-    const starknetAddressRegex = /^0x[0-9a-fA-F]{1,64}$/;
-    return starknetAddressRegex.test(addr);
-  };
 
-  const handleAddressChange = (e) => {
-    const newAddress = e.target.value;
-    setAddress(newAddress);
-    setIsValidAddress(validateStarknetAddress(newAddress));
+const SpinningWheel = () => {
+  const [rotation, setRotation] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [currentSection, setCurrentSection] = useState(null);
+
+  const sections = [
+    {
+      name: "Herbal Anti Acne Cream",
+      bgColor: "rgb(233, 84, 117)",
+      type: "cream",
+      image: herbalCream
+    },
+    {
+      name: "Vitamin C Face Wash",
+      bgColor: "rgb(250, 196, 214)",
+      type: "wash",
+      image: vitaminWash
+    },
+    {
+      name: "Herbal Anti Acne Cream",
+      bgColor: "rgb(233, 84, 117)",
+      type: "cream",
+      image: herbalCream
+    },
+    {
+      name: "Vitamin C Face Wash",
+      bgColor: "rgb(250, 196, 214)",
+      type: "wash",
+      image: vitaminWash
+    },
+    {
+      name: "Herbal Anti Acne Cream",
+      bgColor: "rgb(233, 84, 117)",
+      type: "cream",
+      image: herbalCream
+    },
+    {
+      name: "Vitamin C Face Wash",
+      bgColor: "rgb(250, 196, 214)",
+      type: "wash",
+      image: vitaminWash
+    }
+  ];
+
+  const spinWheel = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    setCurrentSection(null);
+    const newRotation = rotation + 3600 + Math.random() * 1800;
+    setRotation(newRotation);
+    
+    setTimeout(() => {
+      setIsSpinning(false);
+      const section = Math.floor((newRotation % 360) / 60);
+      console.log("Landed on section:", sections[section].name);
+      setCurrentSection(sections[section]);
+    }, 8000);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#0C0C4F] to-[#0C0C4F]/90 text-[#FAFAFA] font-mono">
-      <div className="sm:w-[300px] md:w-[500px] px-4">
-        <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#E6778B] to-[#FAFAFA]">
-            Starknet Faucet
-          </h1>
-          <p className="text-[#FAFAFA]/70">
-            Get testnet tokens for your Starknet journey
-          </p>
-        </div>
+    <div className="flex flex-col items-center justify-center gap-8 p-4">
+      <h1 className="text-4xl font-bold" style={{ color: "rgb(233, 84, 117)" }}>
+        The Ultimate Nail Bar
+      </h1>
+      
+      <div className="relative w-86 h-86">
+        <svg 
+          viewBox="0 0 500 500"
+          className="w-full h-full"
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transition: 'transform 8s cubic-bezier(0.17, 0.67, 0.12, 0.99)'
+          }}
+        >
+          {/* Circular text paths */}
+          <defs>
+            {sections.map((_, i) => (
+              <path
+                key={`textPath${i}`}
+                id={`textPath${i}`}
+                d={`M 250,250 m 0,-240 a 240,240 0 0,1 207.8,120`}
+                fill="none"
+                transform={`rotate(${i * 60}, 250, 250)`}
+              />
+            ))}
+          </defs>
 
-        <div className="backdrop-blur-sm bg-[#FAFAFA]/5 rounded-2xl p-6 shadow-xl border border-[#FAFAFA]/10">
-          {/* Address Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2 text-[#FAFAFA]">
-              Starknet Address
-            </label>
-            <input 
-              type="text" 
-              placeholder="0x..." 
-              value={address}
-              onChange={handleAddressChange}
-              className="w-full px-4 py-3 rounded-xl bg-[#FAFAFA]/10 border border-[#FAFAFA]/20 
-                       text-[#FAFAFA] placeholder-[#FAFAFA]/30 outline-none focus:border-[#E6778B] 
-                       transition-all duration-300"
-            />
-            {address && !isValidAddress && (
-              <p className="mt-2 text-sm text-[#E6778B]">Please enter a valid Starknet address</p>
-            )}
-          </div>
+          {/* Sections */}
+          <g>
+            {sections.map((section, i) => (
+              <g key={i}>
+                {/* Section background */}
+                <path
+                  d={`M 250,250 
+                      L ${250 + 250 * Math.cos((i * 60 - 90) * Math.PI / 180)},${250 + 250 * Math.sin((i * 60 - 90) * Math.PI / 180)} 
+                      A 250,250 0 0,1 ${250 + 250 * Math.cos((i * 60 - 30) * Math.PI / 180)},${250 + 250 * Math.sin((i * 60 - 30) * Math.PI / 180)} 
+                      Z`}
+                  fill={section.bgColor}
+                  stroke="rgb(207, 181, 59)"
+                  strokeWidth="2"
+                />
 
-          {/* Token Selection */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium mb-2 text-[#FAFAFA]">
-              Select Token
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <button 
-                onClick={() => setSelectedToken('STRK')}
-                className={`px-4 py-3 rounded-xl transition-all duration-300 
-                  ${selectedToken === 'STRK' 
-                    ? 'bg-[#E6778B] text-[#FAFAFA] shadow-lg' 
-                    : 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-[#FAFAFA]/20'
-                  }`}
-              >
-                STRK
-              </button>
-              <button 
-                onClick={() => setSelectedToken('ETH')}
-                className={`px-4 py-3 rounded-xl transition-all duration-300 
-                  ${selectedToken === 'ETH' 
-                    ? 'bg-[#E6778B] text-[#FAFAFA] shadow-lg' 
-                    : 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-[#FAFAFA]/20'
-                  }`}
-              >
-                ETH
-              </button>
-            </div>
+                {/* Product image */}
+                <image
+                  href={section.image}
+                  x={250 + 120 * Math.cos((i * 60 - 60) * Math.PI / 180) - (section.type === 'cream' ? 40 : 30)}
+                  y={250 + 120 * Math.sin((i * 60 - 60) * Math.PI / 180) - (section.type === 'cream' ? 40 : 50)}
+                  width={section.type === 'cream' ? 80 : 60}
+                  height={section.type === 'cream' ? 80 : 100}
+                  transform={`
+                    translate(${250 + 120 * Math.cos((i * 60 - 60) * Math.PI / 180)}, ${250 + 120 * Math.sin((i * 60 - 60) * Math.PI / 180)})
+                    rotate(${-rotation})
+                    translate(-${250 + 120 * Math.cos((i * 60 - 60) * Math.PI / 180)}, -${250 + 120 * Math.sin((i * 60 - 60) * Math.PI / 180)})
+                  `}                />
 
-            <div className="mt-4 text-center text-sm text-[#FAFAFA]/70 bg-[#FAFAFA]/5 rounded-xl p-3">
-              {selectedToken === 'STRK' 
-                ? "You can request 150 STRKs every 24 hours"
-                : "You can request 0.002 ETH every 24 hours"
-              }
-            </div>
-          </div>
+                {/* Section text */}
+                <text className="text-lg" style={{ fontSize: '18px', fontWeight: '500' }}>
+                  <textPath
+                    href={`#textPath${i}`}
+                    startOffset="50%"
+                    style={{ 
+                      fill: 'black',
+                      textAnchor: 'middle',
+                      dominantBaseline: 'hanging'
+                    }}
+                  >
+                    {section.name}
+                  </textPath>
+                </text>
+              </g>
+            ))}
+          </g>
 
-          {/* Request Button */}
-          <button 
-            disabled={!isValidAddress}
-            className={`w-full py-4 rounded-xl font-medium transition-all duration-300
-              ${isValidAddress 
-                ? 'bg-gradient-to-r from-[#E6778B] to-[#E6778B]/80 hover:opacity-90 shadow-lg' 
-                : 'bg-[#FAFAFA]/10 text-[#FAFAFA]/40 cursor-not-allowed'
-              }`}
+          {/* Center circle with leaf icon */}
+          <circle
+            cx="250"
+            cy="250"
+            r="40"
+            fill="white"
+            stroke="rgb(207, 181, 59)"
+            strokeWidth="2"
+          />
+          <text 
+            x="250" 
+            y="250" 
+            textAnchor="middle" 
+            dominantBaseline="middle" 
+            style={{ fontSize: '24px' }}
           >
-            Request Tokens
-          </button>
-        </div>
+            🌿
+          </text>
+        </svg>
 
-        {/* Footer */}
-        <div className="text-center mt-6 text-sm text-[#FAFAFA]/50">
-          Powered by winks.fun
+        {/* Pointer Triangle */}
+        <div className="absolute top-0 left-1/2 -mt-1 -ml-4 w-8 h-8 z-20">
+          <div 
+            className="w-0 h-0"
+            style={{
+              borderLeft: '16px solid transparent',
+              borderRight: '16px solid transparent',
+              borderTop: '24px solid black'
+            }}
+          />
         </div>
       </div>
+
+      {/* Result Display */}
+      {currentSection && !isSpinning && (
+        <div className="text-lg font-medium text-center" style={{ color: currentSection.bgColor }}>
+          You landed on: {currentSection.name}!
+        </div>
+      )}
+
+      {/* Spin Button */}
+      <button
+        onClick={spinWheel}
+        disabled={isSpinning}
+        className="rounded-full text-white font-bold px-8 py-3"
+        style={{
+          backgroundColor: isSpinning ? '#ccc' : '#f45b3c',
+          cursor: isSpinning ? 'not-allowed' : 'pointer'
+        }}
+      >
+        <div className="flex items-center gap-2">
+          Spin for
+          <span className="flex items-center gap-1">
+            <span className="text-xl">🌍</span>
+            <span>5</span>
+          </span>
+        </div>
+      </button>
     </div>
   );
 };
 
-export default App;
+export default SpinningWheel;
