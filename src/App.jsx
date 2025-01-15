@@ -11,6 +11,7 @@ import trimmer from './trimmer.png';
 import iphone from './iphone.png';
 import center from './center.png';
 import betterLuck from './luck.png';
+
 const SpinningWheel = () => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -25,7 +26,7 @@ const SpinningWheel = () => {
       image: hm,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       couponCode: "HM70OFF2024",
-      probability: 10
+      weight: 30
     },
     {
       name: "Trimmer", 
@@ -33,7 +34,7 @@ const SpinningWheel = () => {
       image: trimmer,
       claimUrl: "https://www2.hm.com/en_in/men/products/t-shirts-tank-tops.html",
       couponCode: "HM85OFF2024",
-      probability: 5
+      weight: 5
     },
     {
       name: "FREE Iphone 16",
@@ -41,7 +42,7 @@ const SpinningWheel = () => {
       image: iphone,
       claimUrl: "https://www2.hm.com/en_in/free-tshirt-collection.html",
       couponCode: "HMFREE2024",
-      probability: 0
+      weight: 0
     },
     {
       name: "Smartwatch",
@@ -49,7 +50,7 @@ const SpinningWheel = () => {
       image: watch,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       couponCode: "HM70OFF2024",
-      probability: 5
+      weight: 5
     },
     {
       name: "Starbucks Voucher",
@@ -57,7 +58,7 @@ const SpinningWheel = () => {
       image: starbucks,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       couponCode: "HM70OFF2024",
-      probability: 10
+      weight: 10
     },
     {
       name: "GFit Token",
@@ -65,7 +66,7 @@ const SpinningWheel = () => {
       image: gfitToken,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       couponCode: "HM70OFF2024",
-      probability: 10
+      weight: 10  // Drastically reduced
     },
     {
       name: "Better luck next time",
@@ -73,43 +74,50 @@ const SpinningWheel = () => {
       image: betterLuck,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       couponCode: "HM70OFF2024",
-      probability: 60
+      weight: 70  // Significantly increased
     },
   ];
 
   const getRandomSectionIndex = () => {
-    const random = Math.random() * 100;
-    let sum = 0;
-    for (let i = 0; i < sections.length; i++) {
-      sum += sections[i].probability;
-      if (random <= sum) {
-        return i;
-      }
+    // First, always check if we should return "Better luck next time"
+    const forceLoss = Math.random();
+    if (forceLoss < 0.95) {  // 95% chance of "Better luck next time"
+      return sections.length - 1;
     }
-    return sections.length - 1;
+    
+    // If we get here (5% chance), NEVER select GFit Token
+    // We'll only select from indexes 0-4 (excluding GFit Token and Better luck)
+    const availableIndexes = [0, 1, 3, 4];  // Explicitly exclude GFit Token (index 5)
+    const randomIndex = Math.floor(Math.random() * availableIndexes.length);
+    return availableIndexes[randomIndex];
   };
 
   const spinWheel = () => {
     if (isSpinning) return;
+    
     setIsSpinning(true);
     setCurrentSection(null);
     setShowOverlay(false);
     setCopied(false);
     
-    const numberOfRotations = 5 + Math.floor(Math.random() * 5);
+    const numberOfRotations = 5 + Math.floor(Math.random() * 3);
     const degreesPerSection = 360 / sections.length;
     
-    // Get random section based on probability
-    const selectedIndex = getRandomSectionIndex();
+    const selectedIndex = getRandomSectionIndex() ;
+    console.log("selectedIndex",selectedIndex);
+
+    const si = selectedIndex +1;
     const baseRotation = numberOfRotations * 360;
-    const sectionRotation = (sections.length - selectedIndex) * degreesPerSection;
-    const randomOffset = Math.random() * degreesPerSection;
-    const newRotation = baseRotation + sectionRotation + randomOffset;
+    const sectionRotation = (sections.length - si) * degreesPerSection;
+    const offset = degreesPerSection / 2;
+    const newRotation = rotation + baseRotation + sectionRotation + offset;
     
     setRotation(newRotation);
     
     setTimeout(() => {
       setIsSpinning(false);
+      console.log("sections[selectedIndex]",sections[selectedIndex]);
+      
       setCurrentSection(sections[selectedIndex]);
       setShowOverlay(true);
     }, 8000);
@@ -237,7 +245,6 @@ const SpinningWheel = () => {
       >
         <div className="flex items-center gap-2">
           Spin Now
-      
         </div>
       </button>
 
@@ -251,9 +258,7 @@ const SpinningWheel = () => {
               <X size={24} />
             </button>
             
-            <div className="relative z-10">
-              {/* <img src="/api/placeholder/100/100" alt="Gift" className="w-24 h-24 mx-auto mb-4" /> */}
-              
+            <div className="relative z-10">              
               <h2 className="text-2xl font-bold text-center mb-2">
                 {currentSection.name}
               </h2>
@@ -311,7 +316,7 @@ const SpinningWheel = () => {
         </div>
       )}
 
-      <div className="text-center text-sm text-black text-bold  font-medium">
+      <div className="text-center text-sm text-black text-bold font-medium">
         Powered by winks.fun
       </div>
     </div>
