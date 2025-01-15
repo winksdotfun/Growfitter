@@ -122,9 +122,9 @@ const SpinningWheel = () => {
         <img src={metis} alt="Metis" className="h-8" />
       </div>
       
-      <img src={spinimg} alt="Get Free H&M T-Shirt" className="h-16" />
+      <img src={spinimg} alt="Spin to Win" className="h-12" />
 
-      <div className="relative w-96 h-96">
+      <div className="relative h-70 w-96 ">
         <svg 
           viewBox="0 0 500 500"
           className="w-full h-full"
