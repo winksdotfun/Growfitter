@@ -116,7 +116,7 @@ const SpinningWheel = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-0 pt-4 px-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
       <div className="flex justify-between w-full max-w-xl px-4">
         <img src={growfitter} alt="Growfitter" className="h-8" />
         <img src={metis} alt="Metis" className="h-8" />
@@ -124,7 +124,7 @@ const SpinningWheel = () => {
       
       <img src={spinimg} alt="Spin to Win" className="h-12" />
 
-      <div className="relative h-70 w-96 ">
+      <div className="relative h-[340px] w-[340px]">
         <svg 
           viewBox="0 0 500 500"
           className="w-full h-full"
@@ -233,7 +233,7 @@ const SpinningWheel = () => {
       <button
         onClick={spinWheel}
         disabled={isSpinning}
-        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white font-semibold px-8 py-3 rounded-2xl transition-colors"
+        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white font-semibold px-8 py-3 rounded-2xl transition-colors mt-2"
       >
         <div className="flex items-center gap-2">
           Spin Now
@@ -252,7 +252,7 @@ const SpinningWheel = () => {
             </button>
             
             <div className="relative z-10">
-              <img src="/api/placeholder/100/100" alt="Gift" className="w-24 h-24 mx-auto mb-4" />
+              {/* <img src="/api/placeholder/100/100" alt="Gift" className="w-24 h-24 mx-auto mb-4" /> */}
               
               <h2 className="text-2xl font-bold text-center mb-2">
                 {currentSection.name}
