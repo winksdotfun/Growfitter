@@ -116,7 +116,7 @@ const SpinningWheel = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8 p-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
       <div className="flex justify-between w-full max-w-xl px-4">
         <img src={growfitter} alt="Growfitter" className="h-8" />
         <img src={metis} alt="Metis" className="h-8" />
