@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import spinimg from './spin.png';
 import growfitter from './growfitter.png';
@@ -19,6 +19,15 @@ const SpinningWheel = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [copied, setCopied] = useState(false);
   const [couponCode, setCouponCode] = useState('');
+  const [hasSpun, setHasSpun] = useState(false);
+
+  // Check session storage on component mount
+  useEffect(() => {
+    const spunStatus = sessionStorage.getItem('hasSpun');
+    if (spunStatus === 'true') {
+      setHasSpun(true);
+    }
+  }, []);
   
   const sections = [
     {
@@ -136,7 +145,7 @@ const SpinningWheel = () => {
   };
 
   const spinWheel = () => {
-    if (isSpinning) return;
+    if (isSpinning || hasSpun) return;
     
     setIsSpinning(true);
     setCurrentSection(null);
@@ -160,6 +169,9 @@ const SpinningWheel = () => {
     
     setTimeout(async () => {
       setIsSpinning(false);
+      setHasSpun(true);
+      // Store spin status in session storage
+      sessionStorage.setItem('hasSpun', 'true');
       console.log("sections[selectedIndex]", sections[selectedIndex]);
       
       if ([0, 1, 3,4].includes(selectedIndex)) {
@@ -297,11 +309,11 @@ const SpinningWheel = () => {
 
       <button
         onClick={spinWheel}
-        disabled={isSpinning}
+        disabled={isSpinning || hasSpun}
         className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white font-semibold px-8 py-3 rounded-2xl transition-colors mt-2"
       >
         <div className="flex items-center gap-2">
-          Spin Now
+          {hasSpun ? 'Already Spun' : 'Spin Now'}
         </div>
       </button>
 
