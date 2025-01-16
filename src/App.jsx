@@ -21,12 +21,29 @@ const SpinningWheel = () => {
   const [couponCode, setCouponCode] = useState('');
   const [hasSpun, setHasSpun] = useState(false);
 
-  // Check session storage on component mount
+  // Check session storage on component mount and make IP status request
   useEffect(() => {
     const spunStatus = sessionStorage.getItem('hasSpun');
     if (spunStatus === 'true') {
       setHasSpun(true);
     }
+
+    // Check IP status
+    const checkIpStatus = async () => {
+      try {
+        const response = await fetch('https://orca-app-ezrxl.ondigitalocean.app/api/check-ip-status');
+        const data = await response.json();
+        console.log('IP Status Response:', data);
+
+        if(data.hasClaimed){
+          setHasSpun(true);
+        }
+      } catch (error) {
+        console.error('Error checking IP status:', error);
+      }
+    };
+
+    checkIpStatus();
   }, []);
   
   const sections = [
