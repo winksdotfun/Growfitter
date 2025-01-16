@@ -125,7 +125,7 @@ const SpinningWheel = () => {
     },
     {
       name: "Better luck next time",
-      bgColor: "#1b0a40",
+      bgColor: "#3F2B96",
       image: betterLuck,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
       probability: 0.60, // 85% chance
@@ -258,7 +258,7 @@ const SpinningWheel = () => {
                     startOffset="40%"
                     className="text-sm font-medium"
                     style={{ 
-                      fill: section.bgColor === '#6699FF' || section.bgColor === '#1b0a40' ? '#FFFFFF' : '#000000',
+                      fill: section.bgColor === '#6699FF' || section.bgColor === '#3F2B96' ? '#FFFFFF' : '#000000',
                       textAnchor: 'middle',
                       dominantBaseline: 'hanging',
                       fontSize: '16px',
