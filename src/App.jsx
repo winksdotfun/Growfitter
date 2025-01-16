@@ -69,7 +69,7 @@ const SpinningWheel = () => {
       bgColor: "#6699FF",
       image: iphone,
       claimUrl: "https://www.growfitter.com/store/#!/iPhone-16/p/719808627/category=0",
-      probability: 0.000, // 0.1% chance
+      probability: 0.000, // 0% chance
       instructions: [
         "1. We are ran out of stocks",
         "2. Try again next time"
@@ -385,7 +385,7 @@ const SpinningWheel = () => {
                   </button>
                 </>
               ) : (
-                <p className="text-xl text-center mb-6">Try again next time!</p>
+                <p className="text-xl text-center mb-6">Please spin again later!</p>
               )}
             </div>
           </div>
