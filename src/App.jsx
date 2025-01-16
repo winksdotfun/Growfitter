@@ -99,18 +99,21 @@ const SpinningWheel = () => {
       claimUrl: "https://www.growfitter.com/store/#!/Starbucks-E-Gift-Card/p/719797918/category=0",
       probability: 0.05, // 5% chance
       instructions: [
-        "1. Save your Starbucks code",
-        "2. Visit any Starbucks outlet",
-        "3. Order your favorite drinks",
-        "4. Show code to barista",
-        "5. Enjoy your free coffee!"
+        "1. Copy your exclusive coupon code",
+        "2. Click on the Claim now Button",
+        "3. It will redirect to the redemption link",
+        "4. Click on the Buy Now Button",
+        "5. Copy & Paste the Coupon in the discount Bar & click apply",
+        "6. Redirect to the payment page",
+        "7. No Shipping charges to be paid",
+        "8. Your order will be successfully placed"
       ]
     },
     {
       name: "GFit Token",
       bgColor: "#FFFFFF",
       image: gfitToken,
-      claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
+      claimUrl: "",
       probability: 0.009, // 0.9% chance
       instructions: [
         "1. Copy your coupon code",
@@ -125,7 +128,7 @@ const SpinningWheel = () => {
       bgColor: "#1b0a40",
       image: betterLuck,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
-      probability: 0.45, // 85% chance
+      probability: 0.60, // 85% chance
     },
   ];
 
