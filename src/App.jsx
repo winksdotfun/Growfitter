@@ -240,10 +240,10 @@ const SpinningWheel = () => {
 
                 <image
                   href={section.image}
-                  x={250 + 140 * Math.cos((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 45}
-                  y={250 + 140 * Math.sin((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 45}
-                  width="100"
-                  height="100"
+                  x={250 + 140 * Math.cos((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - (section.image === iphone ? 60 : section.image === gfitToken ? 55 : 45)}
+                  y={250 + 140 * Math.sin((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - (section.image === iphone ? 60 : section.image === gfitToken ? 55 : 45)}
+                  width={section.image === iphone ? "130" : section.image === gfitToken ? "120" : "100"}
+                  height={section.image === iphone ? "130" : section.image === gfitToken ? "120" : "100"}
                   preserveAspectRatio="xMidYMid meet"
                   transform={`
                     rotate(${i * (360/sections.length) + (180/sections.length)}, 
