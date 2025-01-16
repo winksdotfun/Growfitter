@@ -65,7 +65,7 @@ const SpinningWheel = () => {
       ]
     },
     {
-      name: "FREE Iphone 16",
+      name: "iPhone",
       bgColor: "#6699FF",
       image: iphone,
       claimUrl: "https://www.growfitter.com/store/#!/iPhone-16/p/719808627/category=0",
@@ -291,10 +291,10 @@ const SpinningWheel = () => {
           />
           <image
             href={center}
-            x="230"
-            y="230"
-            width="40"
-            height="40"
+            x="200"
+            y="205"
+            width="100"
+            height="100"
           />
         </svg>
 
@@ -316,7 +316,7 @@ const SpinningWheel = () => {
         className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white font-semibold px-8 py-3 rounded-2xl transition-colors mt-2"
       >
         <div className="flex items-center gap-2">
-          {hasSpun ? 'Already Spun' : 'Spin Now'}
+          {hasSpun ? 'Spin again later' : 'Spin Now'}
         </div>
       </button>
 
