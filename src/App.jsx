@@ -10,7 +10,7 @@ import hm from './handm.png';
 import trimmer from './trimmer.png';
 import iphone from './iphone.png';
 import center from './center.png';
-import betterLuck from './luck.png';
+import betterLuck from './betterluck.png';
 
 const SpinningWheel = () => {
   const [rotation, setRotation] = useState(0);
@@ -240,10 +240,10 @@ const SpinningWheel = () => {
 
                 <image
                   href={section.image}
-                  x={250 + 140 * Math.cos((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 35}
-                  y={250 + 140 * Math.sin((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 35}
-                  width="70"
-                  height="70"
+                  x={250 + 140 * Math.cos((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 45}
+                  y={250 + 140 * Math.sin((i * (360/sections.length) + (180/sections.length) - 90) * Math.PI / 180) - 45}
+                  width="100"
+                  height="100"
                   preserveAspectRatio="xMidYMid meet"
                   transform={`
                     rotate(${i * (360/sections.length) + (180/sections.length)}, 
@@ -261,7 +261,7 @@ const SpinningWheel = () => {
                       fill: section.bgColor === '#6699FF' || section.bgColor === '#1b0a40' ? '#FFFFFF' : '#000000',
                       textAnchor: 'middle',
                       dominantBaseline: 'hanging',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       fontWeight: '500'
                     }}
                   >
