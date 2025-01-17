@@ -11,6 +11,7 @@ import trimmer from './trimmer.png';
 import iphone from './iphone.png';
 import center from './center.png';
 import betterLuck from './betterluck.png';
+import { trackSpinEvent, trackButtonClick, trackPageView, trackError } from './services/analytics';
 
 const SpinningWheel = () => {
   const [rotation, setRotation] = useState(0);
@@ -23,10 +24,8 @@ const SpinningWheel = () => {
 
   // Check session storage on component mount and make IP status request
   useEffect(() => {
+    trackPageView('spin_wheel_page');
     
-
-
-    // Check IP status
     const checkIpStatus = async () => {
       try {
         const response = await fetch('https://orca-app-ezrxl.ondigitalocean.app/api/check-ip-status');
@@ -35,17 +34,17 @@ const SpinningWheel = () => {
 
         if(data.hasClaimed && data.hasClaimed === true){
           setHasSpun(true);    
-           sessionStorage.setItem('hasSpun', 'true');
-
+          sessionStorage.setItem('hasSpun', 'true');
         }
       } catch (error) {
+        trackError('ip_check_error', error.message, 'SpinningWheel');
         console.error('Error checking IP status:', error);
       }
     };
 
     checkIpStatus();
   }, []);
-  
+
   const sections = [
     {
       name: "H&M Voucher - 75% Off",
@@ -164,54 +163,92 @@ const SpinningWheel = () => {
   };
 
   const spinWheel = () => {
-    if (isSpinning || hasSpun) return;
-    
+    if (isSpinning || hasSpun) {
+      trackButtonClick('spin_button', 'spin_wheel_page', { status: 'already_spun' });
+      return;
+    }
+
+    trackSpinEvent('start');
     setIsSpinning(true);
     setCurrentSection(null);
     setShowOverlay(false);
-    setCopied(false);
-    setCouponCode('');
-    
-    const numberOfRotations = 5 + Math.floor(Math.random() * 3);
-    const degreesPerSection = 360 / sections.length;
-    
-    const selectedIndex = getRandomSectionIndex();
-    console.log("selectedIndex", selectedIndex);
 
-    const si = selectedIndex + 1;
-    const baseRotation = numberOfRotations * 360;
-    const sectionRotation = (sections.length - si) * degreesPerSection;
-    const offset = degreesPerSection / 2;
-    const newRotation = rotation + baseRotation + sectionRotation + offset;
-    
+    const newRotation = rotation + 1800 + Math.random() * 360;
     setRotation(newRotation);
-    
-    setTimeout(async () => {
-      setIsSpinning(false);
-      setHasSpun(true);
-      // Store spin status in session storage
-      sessionStorage.setItem('hasSpun', 'true');
-      console.log("sections[selectedIndex]", sections[selectedIndex]);
-      
-      if ([0, 1, 3,4].includes(selectedIndex)) {
-        try {
-          const response = await fetch(`https://orca-app-ezrxl.ondigitalocean.app/api/coupon?id=${selectedIndex}`);
-          const data = await response.json();
-          console.log('Coupon response:', data);
 
-          setCouponCode(data.couponCode);
-        } catch (error) {
-          console.error('Error fetching coupon:', error);
-          setCouponCode('ERROR_FETCHING_COUPON');
-        }
-      }
+    setTimeout(() => {
+      setIsSpinning(false);
+      const normalizedRotation = newRotation % 360;
+      const sectionSize = 360 / sections.length;
+      const selectedIndex = Math.floor((360 - (normalizedRotation % 360)) / sectionSize);
       
+      const winData = {
+        prize_name: sections[selectedIndex].name,
+        prize_index: selectedIndex,
+        is_winning_prize: [0, 1, 3, 4].includes(selectedIndex),
+        timestamp: new Date().toISOString(),
+        session_id: sessionStorage.getItem('sessionId') || Math.random().toString(36).substring(7)
+      };
+      
+      // Store session ID if not exists
+      if (!sessionStorage.getItem('sessionId')) {
+        sessionStorage.setItem('sessionId', winData.session_id);
+      }
+
+      trackSpinEvent('complete', sections[selectedIndex].name, winData);
       setCurrentSection(sections[selectedIndex]);
       setShowOverlay(true);
+      setHasSpun(true);
+      sessionStorage.setItem('hasSpun', 'true');
+
+      // Record win data if prize won
+      if (winData.is_winning_prize) {
+        try {
+          fetch('https://orca-app-ezrxl.ondigitalocean.app/api/record-ip', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(winData)
+          });
+        } catch (error) {
+          trackError('record_win_error', error.message, 'SpinningWheel');
+          console.error('Error recording win:', error);
+        }
+      }
     }, 8000);
   };
 
-  
+  const handleCopyCode = async () => {
+    try {
+      trackButtonClick('copy_code', 'spin_wheel_page');
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      trackError('copy_code_error', err.message, 'SpinningWheel');
+      console.error('Failed to copy text:', err);
+    }
+  };
+
+  const handleClaimClick = () => {
+    const claimData = {
+      prize_name: currentSection?.name,
+      prize_index: sections.indexOf(currentSection),
+      claim_timestamp: new Date().toISOString(),
+      session_id: sessionStorage.getItem('sessionId')
+    };
+    
+    trackButtonClick('claim_reward', 'spin_wheel_page', claimData);
+    if (currentSection?.claimUrl) {
+      window.open(currentSection.claimUrl, '_blank');
+    }
+  };
+
+  const handleCloseOverlay = () => {
+    trackButtonClick('close_overlay', 'spin_wheel_page');
+    setShowOverlay(false);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-0 pt-4 px-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
@@ -342,7 +379,7 @@ const SpinningWheel = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-gradient-to-b from-pink-50 to-blue-50 p-8 rounded-2xl max-w-md w-full mx-4 relative">
             <button 
-              onClick={() => setShowOverlay(false)}
+              onClick={handleCloseOverlay}
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
             >
               <X size={24} />
@@ -373,16 +410,8 @@ const SpinningWheel = () => {
                           {couponCode}
                         </div>
                         <button 
+                          onClick={handleCopyCode}
                           className={`${copied ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'} text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors`}
-                          onClick={async () => {
-                            try {
-                              await navigator.clipboard.writeText(couponCode);
-                              setCopied(true);
-                              setTimeout(() => setCopied(false), 2000);
-                            } catch (err) {
-                              console.error('Failed to copy text:', err);
-                            }
-                          }}
                         >
                           {copied ? 'Copied!' : 'Copy'}
                           <svg 
@@ -402,8 +431,8 @@ const SpinningWheel = () => {
                       </div>
                       
                       <button 
+                        onClick={handleClaimClick}
                         className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full"
-                        onClick={() => window.open(currentSection.claimUrl, '_blank')}
                       >
                         Claim now
                       </button>
