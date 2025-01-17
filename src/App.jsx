@@ -133,11 +133,10 @@ const SpinningWheel = () => {
       claimUrl: "",
       probability: 0.009, // 0.9% chance
       instructions: [
-        "1. Copy your coupon code",
-        "2. GFit Token is Eligible on Min 100 Growfitter Points",
-        "3. Once we have successfully launched the GFit Token,", 
-        "4. Our support experts will reach out to you",
-        "5. Through your registered Growfitter Contact Number"
+        "1. GFit Token is Eligible on Min 100 Growfitter Points",
+        "2. Once we have successfully launched the GFit Token,", 
+        "3. Our support experts will reach out to you",
+        "4. Through your registered Growfitter Contact Number"
       ]
     },
     {
@@ -145,7 +144,7 @@ const SpinningWheel = () => {
       bgColor: "#3F2B96",
       image: betterLuck,
       claimUrl: "https://www2.hm.com/en_in/men/shop-by-product/t-shirts-and-tanks.html",
-      probability: 0.60, // 85% chance
+      probability: 0.60, // 85% chance,
     },
   ];
 
@@ -367,45 +366,49 @@ const SpinningWheel = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center justify-between">
-                    <div className="font-mono font-semibold text-gray-800">
-                      {couponCode}
-                    </div>
-                    <button 
-                      className={`${copied ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'} text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors`}
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(couponCode);
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 2000);
-                        } catch (err) {
-                          console.error('Failed to copy text:', err);
-                        }
-                      }}
-                    >
-                      {copied ? 'Copied!' : 'Copy'}
-                      <svg 
-                        width="16" 
-                        height="16" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
+                  {currentSection.name !== "GFit Token" && (
+                    <>
+                      <div className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center justify-between">
+                        <div className="font-mono font-semibold text-gray-800">
+                          {couponCode}
+                        </div>
+                        <button 
+                          className={`${copied ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'} text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors`}
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(couponCode);
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            } catch (err) {
+                              console.error('Failed to copy text:', err);
+                            }
+                          }}
+                        >
+                          {copied ? 'Copied!' : 'Copy'}
+                          <svg 
+                            width="16" 
+                            height="16" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                          >
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                          </svg>
+                        </button>
+                      </div>
+                      
+                      <button 
+                        className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full"
+                        onClick={() => window.open(currentSection.claimUrl, '_blank')}
                       >
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <button 
-                    className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full"
-                    onClick={() => window.open(currentSection.claimUrl, '_blank')}
-                  >
-                    Claim now
-                  </button>
+                        Claim now
+                      </button>
+                    </>
+                  )}
                 </>
               ) : (
                 <p className="text-xl text-center mb-6">Please spin again later!</p>
