@@ -212,6 +212,8 @@ const SpinningWheel = () => {
     }, 8000);
   };
 
+  
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-0 pt-4 px-4 bg-gradient-to-b from-blue-400 to-blue-200 relative">
       <div className="flex justify-between w-full max-w-xl px-4">
@@ -371,10 +373,14 @@ const SpinningWheel = () => {
                     </div>
                     <button 
                       className={`${copied ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'} text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors`}
-                      onClick={() => {
-                        navigator.clipboard.writeText(couponCode);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(couponCode);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        } catch (err) {
+                          console.error('Failed to copy text:', err);
+                        }
                       }}
                     >
                       {copied ? 'Copied!' : 'Copy'}
