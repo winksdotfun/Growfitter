@@ -69,7 +69,7 @@ const SpinningWheel = () => {
       bgColor: "#FFFFFF",
       image: trimmer,
       claimUrl: "https://www.growfitter.com/store/#!/Zebronics-Zeb-HT104/p/717582147/category=0",
-      probability: 0.2, // 2% chance
+      probability: 0.000, // 2% chance
       instructions: [
         "1. Copy your exclusive coupon code",
         "2. Click on the Claim now Button",
