@@ -23,10 +23,8 @@ const SpinningWheel = () => {
 
   // Check session storage on component mount and make IP status request
   useEffect(() => {
-    const spunStatus = sessionStorage.getItem('hasSpun');
-    if (spunStatus === 'true') {
-      setHasSpun(true);
-    }
+    
+
 
     // Check IP status
     const checkIpStatus = async () => {
@@ -35,8 +33,10 @@ const SpinningWheel = () => {
         const data = await response.json();
         console.log('IP Status Response:', data);
 
-        if(data.hasClaimed){
-          setHasSpun(true);
+        if(data.hasClaimed && data.hasClaimed === true){
+          setHasSpun(true);    
+           sessionStorage.setItem('hasSpun', 'true');
+
         }
       } catch (error) {
         console.error('Error checking IP status:', error);
